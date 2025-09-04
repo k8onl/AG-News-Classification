@@ -62,6 +62,7 @@ def predict_category(input: NewsInput):
     text_tfidf = tfidf.transform([clean_text])
     pred = linear_svc.predict(text_tfidf)[0]
     return {"prediction",class_mapping[pred]}
-
+    
 if __name__ == "__main__":
+
     uvicorn.run("server:app", host="127.0.0.1", port=8000, reload=True)
