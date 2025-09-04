@@ -58,12 +58,18 @@ def preprocess_text(text):
 # Endpoint للتصنيف
 @app.post("/predict")
 def predict_category(input: NewsInput):
-    clean_text = preprocess_text(input.text)
-    text_tfidf = tfidf.transform([clean_text])
-    pred = linear_svc.predict(text_tfidf)[0]
-    return {"prediction":class_mapping[pred]}
+    try:
+        clean_text = preprocess_text(input.text)
+        text_tfidf = tfidf.transform([clean_text])
+        pred = linear_svc.predict(text_tfidf)[0]
+        print("Predicted index:", pred)  # Debug
+        category = class_mapping.get(pred, "Unknown Category")
+        return {"prediction": category}  # Return dictionary
+    except Exception as e:
+        return {"error": str(e), "prediction": "Unknown Category"}
     
 if __name__ == "__main__":
 
     uvicorn.run("server:app", host="127.0.0.1", port=8000, reload=True)
+
 
